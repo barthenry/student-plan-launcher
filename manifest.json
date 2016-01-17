@@ -1,0 +1,17 @@
+{
+    "name": "Student Plan PWr launcher",
+    "version": "1.0",
+    "manifest_version": 2,
+    "browser_action": {
+        "name": "Click to get URL"
+    },
+    "background":{
+        "scripts":["background.js"]
+    },
+    "permissions":[
+        "https://edukacja.pwr.wroc.pl/EdukacjaWeb/zapisy.do*",
+        "storage",
+        "contextMenus",
+        "http://localhost:5000/parse/data"
+    ]
+}
