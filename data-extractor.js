@@ -50,6 +50,11 @@ function createGroupFromRows($rows){
 
     // dodac obsluge parzystosci i godziny zakonczenia kursow
     group.day = timeAndPlaceArray[0].split(" ")[0].split("/")[0];
+    group.occurance = timeAndPlaceText.indexOf("TN") > -1
+        ? "odd"
+        : (timeAndPlaceText.indexOf("TP") > -1
+            ? "even"
+            : "");
     group.time = timeAndPlaceArray[0].split(" ")[1].split("-")[0].replace(/^0+/, '');
 
     group.place = timeAndPlaceArray[1].split(" ")[2]
@@ -84,24 +89,34 @@ function saveCourse(course) {
 
     var courses = [];
 
-    chrome.storage.local.get('courses_temp3', function (result) {
+    chrome.storage.local.get('courses_temp4', function (result) {
         console.log("sprawdzam");
 
-        if(!result.courses_temp3){
+        if(!result.courses_temp4){
             console.log("brak");
             courses = {
                 byIDs: {}
             }
         } else {
-            courses = result.courses_temp3;
+            courses = result.courses_temp4;
         }
 
 
         courses.byIDs[course.id] = course;
         console.log(courses);
-        chrome.storage.local.set({'courses_temp3': courses}, function() {
+        chrome.storage.local.set({'courses_temp4': courses}, function() {
             // Notify that we saved.
-            console.log('Zapisano!', "liczba kursów w pamięci: ", Object.size(courses.byIDs));
+            var coursesNumber = Object.size(courses.byIDs);
+
+            console.log('Zapisano!', "liczba kursów w pamięci: ", coursesNumber);
+
+            chrome.runtime.sendMessage({
+                action: 'show-notification',
+                type: "basic",
+                title: "Udało się!",
+                message: "Dane kursu zostały zapisane! Liczba zapisanych kursów: " + coursesNumber + ".",
+                iconUrl: "images/icon_128.png"
+            });
         });
     });
 

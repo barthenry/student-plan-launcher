@@ -12,6 +12,7 @@
         "https://edukacja.pwr.wroc.pl/EdukacjaWeb/zapisy.do*",
         "storage",
         "contextMenus",
+        "notifications",
         "http://localhost:5000/parse/data"
     ]
 }

@@ -64,7 +64,7 @@ function sendData(){
     chrome.storage.local.get('courses_temp2', function (result) {
         console.log("sprawdzam");
 
-        if(!result.courses_temp2){
+        if(!result.courses_temp4){
             alert("Brak danych do przesłania!");
         } else {
             var howMuch = Object.size(result.courses_temp2.byIDs);
@@ -131,8 +131,31 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         xhttp.send(data);
         return true; // prevents the callback from being called too early on return
     }
+
     if(request.action == "open-plan-tab"){
+        console.log("request ", request);
+        console.log("otwieram stronę ",request.url);
         chrome.tabs.create({ url: request.url });
+
+        chrome.storage.local.clear(function() {
+            var error = chrome.runtime.lastError;
+            if (error) {
+                console.error(error);
+            }
+        });
+        
+        return true;
+    }
+
+    if(request.action = "show-notification"){
+        chrome.notifications.create("1", {
+            title: request.title,
+            message: request.message,
+            type: request.type,
+            iconUrl: request.iconUrl
+        }, function(notId){
+            console.log("Wyświetliło się!");
+        });
     }
 });
 /*
